@@ -1,8 +1,15 @@
 const fs = require('fs');
 
-const loadProgram = inputFile => {
+const loadProgram = (inputFile, noun, verb) => {
     const input = fs.readFileSync(inputFile).toString();
-    return input.split(",").map(val => Number.parseInt(val));
+    const program = input.split(",").map(val => Number.parseInt(val));
+
+    if(noun && verb) {
+        program[1] = noun;
+        program[2] = verb;
+    }
+
+    return program;
 }
 
 const runProgram = program => {    
@@ -38,8 +45,18 @@ programs.forEach((name) => {
     console.log(program);
 });
 
-const program = loadProgram('./day2/input.txt');
-program[1] = 12;
-program[2] = 2;
+const program = loadProgram('./day2/input.txt', 12, 2);
 runProgram(program);
-console.log(program[0]);
+console.log(`Step 1 ${program[0]}`);
+
+for(let noun=0; noun < 100; noun++ ) {
+    for(let verb=0; verb < 100; verb++ ) {
+        const program = loadProgram('./day2/input.txt', noun, verb);
+        runProgram(program);
+
+        if(program[0] === 19690720) {
+            console.log(`noun: ${noun}, verb ${verb}`);
+            console.log(`Step 2 ${100 * noun + verb}`);
+        }
+    }
+}
